@@ -1,0 +1,18 @@
+
+  url = request.json
+  #chamar a tela para o conteudo
+  option = Options()
+  option.headless = True
+  driver = webdriver.Firefox(executable_path='C:\\Python27\\geckodriver.exe')
+  print(url.values)
+  driver.get(url['url'])
+  driver.implicitly_wait(10)  # in seconds
+
+  element =driver.find_element_by_xpath("//div[@class='ui-content']//div[@id='conteudo']//table")
+  html_content = element.get_attribute('outerHTML')
+  #2. Parsear o contéudo HTML beaultifulSoup
+  soup = BeautifulSoup(html_content, 'html.parser')
+  table = soup.find(name='table')
+  #3.Estruturar contéudo em data Frame - Panda
+  df_full = pd.read_html(str(table))[0].head()
+  df_full.columns = ['Nome', 'Valor']
